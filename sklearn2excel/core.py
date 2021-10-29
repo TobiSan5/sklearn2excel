@@ -1,4 +1,4 @@
-from typing import Callable, List, Union, Tuple, Any
+from typing import Callable, List, Union, Set, Tuple, Any
 
 
 class DecisionTreeTable:
@@ -8,6 +8,7 @@ class DecisionTreeTable:
     source: List[List]
     _rows: dict[Any, Any]
     _width: int
+    _features: Set[str]
 
     def __init__(self, source: List[List] = [[], ]):
         """    :source -- decision tree lines of elements"""
@@ -19,6 +20,10 @@ class DecisionTreeTable:
         # setup hidden width attribute
         # accessed by n_tests property
         self._width = 0
+        # setup hidden features attribute
+        # filled-in by parse_source() method
+        # accessed by get_features() method
+        self._features = set()
 
         # parse the source if not empty
         if len(source[0]) > 0:
@@ -76,6 +81,7 @@ class DecisionTreeTable:
             # if so, update tests in row dict
             # and add test to test buffer
             if test is not None:
+                self._features.add(test[0])
                 self._rows[row_count]['tests'][f'test{x}'] = {
                     'feature': test[0],
                     'comp': test[1],
@@ -145,3 +151,6 @@ class DecisionTreeTable:
     def get_result(self, i_row: int) -> Union[float, None]:
         """Returns the result of row i ."""
         return self._rows[i_row]['result']
+
+    def get_features(self) -> List[str]:
+        return list(self._features)

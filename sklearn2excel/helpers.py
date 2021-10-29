@@ -42,11 +42,15 @@ def create_xlfile(decision_tree_table: DecisionTreeTable,
     assert type(decision_tree_table) is DecisionTreeTable
     assert file_path.split('.')[-1] == 'xlsx', "File path must end with .xlsx"
 
-    def rc2a1(row: int, col: int) -> str:
+    def rc2a1(row: int, col: int, absolute: bool = False) -> str:
         """A1 notation from zero-indexed row-column indexes."""
         assert 0 <= row <= 1048575, "Row index out-of bounds."
         assert 0 <= col <= 16383, "Column index out-of bounds."
 
+        if absolute:
+            anchor = '$'
+        else:
+            anchor = ''
         alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         s_col = ''
         s_row = str(row + 1)
@@ -59,12 +63,14 @@ def create_xlfile(decision_tree_table: DecisionTreeTable,
                 b = b - (c + 1) * 26
             s_col += alph[b]
         s_col += alph[a]
-        return s_col + s_row
+        return anchor + s_col + anchor + s_row
 
     n_rows = decision_tree_table.n_rows
     n_tests = decision_tree_table.n_tests
     tests_col_pos = 2
     tests_row_pos = 0
+    feat_col_pos = 0
+    feat_row_pos = 0
     _dtt = decision_tree_table
 
     # create Excel object and two worksheets
@@ -90,4 +96,23 @@ def create_xlfile(decision_tree_table: DecisionTreeTable,
             tests_col_pos - 2,
             f'=IF({rc_ref_all_test},{_dtt.get_result(i_row)},"")'
         )
+
+    # write features, initial values and make feature names
+    # into sheet Front
+    features = _dtt.get_features()
+    n_feat = len(features)
+    for i_row in range(n_feat):
+        rc_ref = (feat_row_pos + i_row, feat_col_pos)
+        sheet_front.write_string(rc_ref[0], rc_ref[1], features[i_row])
+        sheet_front.write_number(rc_ref[0], rc_ref[1] + 1, 1)
+        a1_ref = rc2a1(rc_ref[0], rc_ref[1] + 1, absolute=True)
+        xl.define_name(features[i_row], f'=Front!{a1_ref}')
+
+    # write average result into cell
+    rc_ref = (feat_row_pos, feat_col_pos + 3)
+    sheet_front.write_string(rc_ref[0], rc_ref[1], 'Average result')
+    sheet_front.write_formula(rc_ref[0], rc_ref[1] + 1,
+                              '=AVERAGE(DTTable!A:A)')
+
+    # finally
     xl.close()
