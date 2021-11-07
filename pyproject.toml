@@ -1,0 +1,15 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "sklearn2excel"
+authors = [{name = "Torbj\u00f8rn Wikestad", email = "torbjorn.wikestad@gmail.com"}]
+readme = "README.md"
+requires_python = ">=3.7"
+dependencies = ["XlsxWriter <=3.0, <4", "scikit-learn >=1.0, <2"]
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/tobisan5/sklearn2excel"
