@@ -10,23 +10,30 @@ from .core import DecisionTreeTable
 
 def export_decisiontrees_to_file(dt_list: List[BaseDecisionTree],
                                 full_path: Path,
-                                features: List[str]) -> None:
+                                features: List[str],
+                                 in_memory=False) -> List:
     """Documentation here."""
-    # look for the greatest dept in BaseDecisionTree.estimators_
+    # look for the greatest depth in decision chains
     depth = 0
     for dt in dt_list:
         if (dpt := dt.get_depth()) > depth:
             print(dpt)
             depth = dpt
     if depth == 0:
-        raise ValueError("Seems like :param: dt_list has no valid decision tree.")
+        raise ValueError("Seems like parameter :dt_list: has no valid decision tree.")
     all_text = []
     for dt in dt_list:
         all_text.append(export_text(decision_tree=dt, feature_names=features, max_depth=depth))
-    with open(full_path, "w") as f:
-        for text in all_text:
-            f.write(text)
-
+    if not in_memory:
+        with open(full_path, "w") as f:
+            for text in all_text:
+                f.write(text)
+        return []
+    else:
+        list_of_lists = []
+        for line in all_text:
+            res.append(line.split())
+        return list_of_lists
 
 def parse_file_to_list(filepath: str) -> List[List[str]]:
     """Documentation here."""
@@ -37,7 +44,7 @@ def parse_file_to_list(filepath: str) -> List[List[str]]:
     return result
 
 def create_xlfile(decision_tree_table: DecisionTreeTable,
-                  file_path: str = 'output.xlsx') -> None:
+                  file_path: Path = Path(Path.cwd() / "output.xlsx")) -> None:
     """Writes an DecisionTreeTable object to an Excel file."""
     assert type(decision_tree_table) is DecisionTreeTable
     assert file_path.split('.')[-1] == 'xlsx', "File path must end with .xlsx"

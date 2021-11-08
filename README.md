@@ -1,5 +1,5 @@
 # sklearn2excel
-> Bringing decision trees to Excel
+> Bringing Scikit-learn decision trees to Excel
 
 <!--
 [![NPM Version][npm-image]][npm-url]
@@ -7,8 +7,12 @@
 [![Downloads Stats][npm-downloads]][npm-url]
 -->
 
-This project aims at a published Python package with a set of tools to export
-machine learning models from Scikit-learn to Excel.
+With this Python package, one can make a trained machine learning model
+accessible to others without having to deploy it as a service.
+More specifically, one can export a Scikit-learn decision 
+tree or random forest model to a Excel workbook.
+All decision chains in model will be represented within a single 
+table and feature values can be tested for an average result.
 
 <!-- 
 Screenshot: 
@@ -16,7 +20,7 @@ Screenshot:
 -->
 
 ### Project overview
-
+Version: 0.1.0
 - helpers module
   - [X] export_decisiontrees_to_file
     - [X] A wrapper function for sklearn.tree.export_to_text ()
@@ -30,23 +34,38 @@ Screenshot:
     - [X] Transforms and represent decisions trees in a datastructure
     - [X] Exposed properties to get info about the structure
     - [X] Exposed methods to get tests and results as indexed rows
-    - [ ] TODO: Handle classifier-type decision trees
+    - [X] TODO: Handle classifier-type decision trees
+- tests
+  - [ ] Full test coverage
 
 ## Installation
 
 ```sh
 pip install sklearn2excel
 ```
+Installation will install scikit-learn and XlsxWriter as well.
 
 ## Usage example
 
 <!--code block with a few useful and motivating examples. Again you’d lay out exactly what people need to type into 
 their shell -->
+```python
+from pathlib import Path
+import sklear2excel
+output_path = Path("./excel_file.xlsx")
+# Example using sklearn.ensemble.RandomForestRegressor model
+# (the model is trained)
+sklearn2excel.export_to_xlsx(randomforestmodel.estimators_, feature_names_list, output_path)
+# Example with single sklearn.tree.DecisionTreeRegressor model
+sklearn2excel.export_to_xlsx(list(dt_model), feature_names_list, output_path)
+```
+
 
 ## Development setup
 
 <!--describe how to install all development dependencies and how to run an automated 
 test-suite-->
+No other development dependencies.
 
 ## Release History
 <!--
@@ -62,6 +81,8 @@ test-suite-->
     * CHANGE: Rename `foo()` to `bar()`
 -->
 
+- 0.1.0
+  - First proper release
 - 0.0.1
   - Work in progress
 

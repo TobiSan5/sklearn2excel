@@ -44,7 +44,8 @@ class DecisionTreeTable:
         # lambda to return columns in line
         ccount_f: Callable = lambda l: sum([1 if e[0] == '|' else 0 for e in l])
         # lambda to return result, if present, else None
-        result_f: Callable = lambda l: float(l[-1].strip('[]')) if l[-2] == 'value:' else None
+        result_f: Callable = \
+            lambda l: float(l[-1].strip('[]')) if l[-2] in ['value:', 'class:'] else None
         # lambda to return test, if present, else None
         test_f: Callable = lambda l: (l[-3], l[-2], float(l[-1])) \
             if l[-2] in ['<=', '>=', '<', '>', '=='] \
