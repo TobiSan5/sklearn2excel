@@ -11,8 +11,8 @@ With this Python package, one can make a trained machine learning model
 accessible to others without having to deploy it as a service.
 More specifically, one can export a Scikit-learn decision 
 tree or random forest model to a Excel workbook.
-All decision chains in model will be represented within a single 
-table and feature values can be tested for an average result.
+All decision chains in the model will be represented within a single 
+table and feature values can be tested for an average prediction.
 
 <!-- 
 Screenshot: 
@@ -22,7 +22,7 @@ Screenshot:
 ### Project overview
 Version: 0.1.0
 - helpers module
-  - [X] export_decisiontrees_to_file
+  - [X] export_to_textfile
     - [X] A wrapper function for sklearn.tree.export_to_text ()
     - [X] Detects maximum tree depth and applies this parameter
   - [X] create_xlfile
@@ -51,13 +51,48 @@ Installation will install scikit-learn and XlsxWriter as well.
 their shell -->
 ```python
 from pathlib import Path
-import sklear2excel
-output_path = Path("./excel_file.xlsx")
-# Example using sklearn.ensemble.RandomForestRegressor model
-# (the model is trained)
-sklearn2excel.export_to_xlsx(randomforestmodel.estimators_, feature_names_list, output_path)
-# Example with single sklearn.tree.DecisionTreeRegressor model
-sklearn2excel.export_to_xlsx(list(dt_model), feature_names_list, output_path)
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import LabelEncoder
+import sklear2excel as s2e
+
+
+# fetch Scikit-learn wine example data as
+# sklearn.utils.Bunch object
+# and prepare example model from
+# sklearn.ensemble.RandomForestClassifier
+# RandomForestRegressor or any classifier/regressor
+# subtype of BaseDecisionTree could be used
+bunch = s2e.get_data_target_and_features()
+wine_data = bunch.data
+wine_target = bunch.target
+wine_features = bunch.feature_names[:4]
+X = wine_data[wine_features]
+y = LabelEncoder().fit_transform(wine_target)
+clf_model = RandomForestClassifier(
+  n_estimators=10, 
+  min_samples_leaf=2
+).fit(X, y)
+
+path_xlsx = Path.cwd() / "excel_output.xlsx"
+path_txt = Path.cwd() / "text_output.txt"
+
+# export model as text file with use of 
+# sklearn export function
+# first param single or ensemble of decision trees
+s2e.export_to_textfile(
+  clf_model.estimators_,  # ensemble of decision trees
+  path_txt,
+  wine_features
+)
+
+# export model as Excel file
+# features written to Front sheet with initial value 1.0
+# decision trees written to 2nd sheet
+s2e.export_to_xlsx(
+  clf_model.estimators_,
+  wine_features,
+  path_xlsx
+)
 ```
 
 
@@ -65,7 +100,7 @@ sklearn2excel.export_to_xlsx(list(dt_model), feature_names_list, output_path)
 
 <!--describe how to install all development dependencies and how to run an automated 
 test-suite-->
-No other development dependencies.
+- Flit ~3.4
 
 ## Release History
 <!--
@@ -83,6 +118,8 @@ No other development dependencies.
 
 - 0.1.0
   - First proper release
+  - NEW: direct function `export_to_xlsx()`
+  - CHANGE: functions and class available at package-level
 - 0.0.1
   - Work in progress
 
