@@ -1,5 +1,5 @@
 """A Python package to facilitate Scikit-learn decision tree export to Excel."""
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "DecisionTreeTable",
     "export_to_textfile",

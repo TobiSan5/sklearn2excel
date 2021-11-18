@@ -20,23 +20,25 @@ Screenshot:
 -->
 
 ### Project overview
-Version: 0.1.0
+Version: 0.1.1
+- package level
+  - export_to_xlsx() (main access point)
+  - export_to_textfile() (alternative use)
+    - detects maximum tree depth and applies this parameter
 - helpers module
-  - [X] export_to_textfile
-    - [X] A wrapper function for sklearn.tree.export_to_text ()
-    - [X] Detects maximum tree depth and applies this parameter
-  - [X] create_xlfile
-    - [X] Writes a DecisionTreeTable object to a Excel sheet
-    - [X] Write features and an initial value of 1 to another sheet
+  - create_xlfile (project internal)
+    - writes a DecisionTreeTable object to a Excel sheet
+    - writes features and an initial value of 1 to front sheet
+    - writes decision trees to 2nd sheet
 - core module
-  - [X] DecisionTreeTable
-    - [X] A class that can be instantiated with a text file
-    - [X] Transforms and represent decisions trees in a datastructure
-    - [X] Exposed properties to get info about the structure
-    - [X] Exposed methods to get tests and results as indexed rows
-    - [X] TODO: Handle classifier-type decision trees
-- tests
-  - [ ] Full test coverage
+  - class DecisionTreeTable (project internal)
+    - a class that can be instantiated with a parsed text file
+    - transforms and represent decisions trees in a datastructure
+    - exposed properties to access info about the structure
+    - exposed methods to get tests and results as indexed rows
+    - handle classifier- and regressor-type decision trees
+- TODO:
+  - thoroughly testing (75%)
 
 ## Installation
 
@@ -116,6 +118,8 @@ test-suite-->
     * CHANGE: Rename `foo()` to `bar()`
 -->
 
+- 0.1.1
+  - FIX: XlsxWriter dependency corrected
 - 0.1.0
   - First proper release
   - NEW: direct function `export_to_xlsx()`
