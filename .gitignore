@@ -1,6 +1,7 @@
 # Excel files
 *.xlsx
 tests/*.xlsx
+tests/*.txt
 
 # Pycharm files
 .idea/

@@ -7,7 +7,7 @@ name = "sklearn2excel"
 authors = [{name = "Torbj\u00f8rn Wikestad", email = "torbjorn.wikestad@gmail.com"}]
 readme = "README.md"
 requires_python = ">=3.7"
-dependencies = ["XlsxWriter <=3.0, <4", "scikit-learn >=1.0, <2"]
+dependencies = ["XlsxWriter >=3.0, <4", "scikit-learn >=1.0, <2"]
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 
